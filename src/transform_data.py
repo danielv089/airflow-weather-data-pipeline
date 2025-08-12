@@ -1,4 +1,6 @@
 import pandas as pd
+from datetime import datetime
+import os
 
 def transfrom_weather_data(ls):
     df=pd.DataFrame(ls)
@@ -20,29 +22,29 @@ def transfrom_weather_data(ls):
         'sys.country': 'country_code',
         'sys.sunrise': 'sunrise',
         'main.temp': 'temp_c',
-        'main.humidity': 'humidity_%',
-        'main.pressure': 'pressure_hPa',
+        'main.humidity': 'humidity_perc',
+        'main.pressure': 'pressure_hpa',
         'main.temp_max' : 'temp_max_c',
         'main.temp_min': 'temp_min_c',
-        'main.sea_level': 'sea_level_hPa',
+        'main.sea_level': 'sea_level_hpa',
         'main.feels_like' : 'feels_like_c',
-        'main.grnd_level': 'grnd_level_hPa',
+        'main.grnd_level': 'grnd_level_hpa',
         'wind.deg' : 'wind_dir_deg',
         'wind.gust': 'wind_gust_m_s',
         'wind.speed': 'wind_speed_m_s',
         'coord.lat' : 'lat_city',
         'coord.lon' : 'lon_city',
-        'clouds.all' : 'cloudiness_%',
+        'clouds.all' : 'cloudiness_perc',
         'weather': 'weather_con_id'  
     }
 
     df_2=df_2.rename(columns=df_rename)
     df_2= df_2.drop(['sys.id', 'sys.type'], axis=1)
-    df_2=df_2[['date_time', 'sunrise', 'sunset', 'timezone',
-               'city_id','city_name', 'country_code', 'lat_city', 'lon_city',
-               'visibility_meters', 'cloudiness_%', 'weather_con_id',
+    df_2=df_2[['date_time', 'sunrise', 'sunset', 'city_id', 'timezone',
+               'city_name', 'country_code', 'lat_city', 'lon_city',
+               'visibility_meters', 'cloudiness_perc', 'weather_con_id',
                'temp_c', 'feels_like_c', 'temp_max_c', 'temp_min_c',
-               'pressure_hPa', 'sea_level_hPa', 'grnd_level_hPa', 'humidity_%',
+               'pressure_hpa', 'sea_level_hpa', 'grnd_level_hpa', 'humidity_perc',
                'wind_speed_m_s', 'wind_gust_m_s', 'wind_dir_deg']]
     
     df_2['city_name']=df_2['city_name'].astype(str)
@@ -111,9 +113,14 @@ def transfrom_weather_data(ls):
         {'weather_id': 804, 'weather_main': 'Clouds', 'weather_desc': 'overcast clouds: 85-100%'}]
 
     df_dim_city = df_2[['city_id', 'city_name', 'lat_city', 'lon_city', 'country_code']]
-    df_dim_weather=pd.DataFrame(weather_codes)
-    df_fact_weather = df_2[['date_time', 'sunrise', 'sunset', 'visibility_meters','cloudiness_%', 'weather_con_id', 'temp_c', 'feels_like_c',
-                            'temp_max_c', 'temp_min_c', 'pressure_hPa', 'sea_level_hPa', 'grnd_level_hPa', 'humidity_%', 'wind_speed_m_s', 
+    df_dim_weather_desc=pd.DataFrame(weather_codes)
+    df_fact_weather = df_2[['date_time', 'sunrise', 'sunset', 'city_id', 'visibility_meters','cloudiness_perc', 'weather_con_id', 'temp_c', 'feels_like_c',
+                            'temp_max_c', 'temp_min_c', 'pressure_hpa', 'sea_level_hpa', 'grnd_level_hpa', 'humidity_perc', 'wind_speed_m_s', 
                             'wind_gust_m_s','wind_dir_deg']]
+    
+    os.makedirs('/opt/airflow/data', exist_ok=True)
+    df_dim_city.to_csv(f"/opt/airflow/data/df_dim_city.csv", index=False)
+    df_dim_weather_desc.to_csv(f"/opt/airflow/data/df_dim_weather_desc.csv", index=False)
+    df_fact_weather.to_csv(f"/opt/airflow/data/df_fact_weather.csv", index=False)
 
-    return df_dim_city, df_dim_weather, df_fact_weather
+    return df_dim_city, df_dim_weather_desc, df_fact_weather
