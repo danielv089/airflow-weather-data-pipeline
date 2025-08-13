@@ -1,3 +1,23 @@
+# --------------------
+# Docker-Compose for Apache Airflow 3.0.3
+# Author:             Dániel Varga
+# Created:            2025-08-10
+# Last Modified:      2025-08-13
+#
+# Description:
+# This docker-compose defines a full Airflow environment with:
+# - Postgres 13 as metadata database
+# - Redis as Celery broker
+# - Airflow components: Scheduler, Webserver (API), Workers, Triggerer, DAG Processor
+# - Airflow init container to set up shared volumes, permissions, and initial config
+# - Flower for Celery monitoring
+
+#Custom Modifications:
+# 1. Mounted /src and /data directories from host to support local development of DAGs and Python modules.
+# 2. Added /opt/airflow/data directory for storing intermediate CSV files for ETL tasks.
+# 3. Added shared volumes so the Postgres container can access files produced by the Scheduler. (e.g., /opt/airflow/data).
+# --------------------
+
 x-airflow-common:
   &airflow-common
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:3.0.3}

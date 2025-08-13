@@ -1,7 +1,23 @@
+# --------------------
+# File Name:          create_weather_db.py
+# Author:             Dániel Varga
+# Created:            2025-08-10
+# Last Modified:      2025-08-13
+#
+# Description:
+# This module contains helper functions to create the PostgreSQL
+# database, schemas, staging tables, and core tables for the weather ETL pipeline.
+# --------------------
+
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 def create_weather_pg_db():
+    """
+    Create the PostgreSQL database 'poland_weather_db' if it does not exist.
 
+    Uses the 'postgres_conn' Airflow connection to check for existence
+    and creates the database if missing.
+    """
     hook = PostgresHook(postgres_conn_id='postgres_conn')
     conn = hook.get_conn()
     conn.autocommit = True
@@ -18,7 +34,14 @@ def create_weather_pg_db():
     conn.close() 
 
 def create_core_weather_tables():
+    """
+    Create core dimension and fact tables
 
+    Tables:
+    - core.dim_city
+    - core.dim_weather_desc
+    - core.fact_weather
+    """
     hook= PostgresHook(postgres_conn_id='postgres_weather_db')
     conn= hook.get_conn()
     conn.autocommit = True
@@ -67,7 +90,13 @@ def create_core_weather_tables():
         conn.close() 
 
 def create_staging_weather_tables():
-
+    """
+    Create staging tables for raw weather data
+    Tables:
+    - staging.city
+    - staging.weather_desc
+    - staging.weather
+    """
     hook= PostgresHook(postgres_conn_id='postgres_weather_db')
     conn= hook.get_conn()
     conn.autocommit = True

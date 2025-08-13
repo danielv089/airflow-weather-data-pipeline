@@ -1,8 +1,41 @@
-import pandas as pd
+# --------------------
+# File Name:          transform_data.py
+# Author:             Dániel Varga
+# Created:            2025-08-10
+# Last Modified:      2025-08-13
+#
+# Description:
+# This module contains the helper function to transform raw weather data
+# from the OpenWeather API into structured DataFrames suitable
+# for loading into PostgreSQL staging and core tables.
+# --------------------
+
 from datetime import datetime
 import os
+import pandas as pd
+
 
 def transfrom_weather_data(ls):
+    """
+    Transform raw weather API data into structured DataFrames for ETL.
+
+    Args:
+        ls (list of dict): List of JSON objects returned by the weather API for multiple cities.
+
+    Returns:
+        tuple: Three DataFrames:
+            - df_dim_city: Dimension table for cities.
+            - df_dim_weather_desc: Dimension table for weather codes/descriptions.
+            - df_fact_weather: Fact table containing detailed weather measurements.
+
+    Steps:
+        1. Normalize nested JSON fields into flat columns.
+        2. Rename columns to match database schema.
+        3. Convert timestamps to proper datetime with timezone adjustment.
+        4. Create DataFrames for core and staging tables.
+        5. Save CSVs to /opt/airflow/data for loading via Airflow operators.
+    """
+
     df=pd.DataFrame(ls)
     df_sys = df['sys'].apply(pd.Series).add_prefix('sys.')
     df_main = df['main'].apply(pd.Series).add_prefix('main.')
