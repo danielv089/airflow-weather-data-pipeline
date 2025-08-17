@@ -2,7 +2,7 @@
 # File Name:          transform_data.py
 # Author:             Dániel Varga
 # Created:            2025-08-10
-# Last Modified:      2025-08-13
+# Last Modified:      2025-08-17
 #
 # Description:
 # This module contains the helper function to transform raw weather data
@@ -88,65 +88,16 @@ def transfrom_weather_data(ls):
     df_2= df_2.drop(columns=['timezone'])
     df_2 = df_2.reset_index(drop=True)
 
-    weather_codes = [
-        {'weather_id': 200, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm with light rain'},
-        {'weather_id': 201, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm with rain'},
-        {'weather_id': 202, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm with heavy rain'},
-        {'weather_id': 210, 'weather_main': 'Thunderstorm', 'weather_desc': 'light thunderstorm'},
-        {'weather_id': 211, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm'},
-        {'weather_id': 212, 'weather_main': 'Thunderstorm', 'weather_desc': 'heavy thunderstorm'},
-        {'weather_id': 221, 'weather_main': 'Thunderstorm', 'weather_desc': 'ragged thunderstorm'},
-        {'weather_id': 230, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm with light drizzle'},
-        {'weather_id': 231, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm with drizzle'},
-        {'weather_id': 232, 'weather_main': 'Thunderstorm', 'weather_desc': 'thunderstorm with heavy drizzle'},
-        {'weather_id': 300, 'weather_main': 'Drizzle', 'weather_desc': 'light intensity drizzle'},
-        {'weather_id': 301, 'weather_main': 'Drizzle', 'weather_desc': 'drizzle'},
-        {'weather_id': 302, 'weather_main': 'Drizzle', 'weather_desc': 'heavy intensity drizzle'},
-        {'weather_id': 310, 'weather_main': 'Drizzle', 'weather_desc': 'light intensity drizzle rain'},
-        {'weather_id': 311, 'weather_main': 'Drizzle', 'weather_desc': 'drizzle rain'},
-        {'weather_id': 312, 'weather_main': 'Drizzle', 'weather_desc': 'heavy intensity drizzle rain'},
-        {'weather_id': 313, 'weather_main': 'Drizzle', 'weather_desc': 'shower rain and drizzle'},
-        {'weather_id': 314, 'weather_main': 'Drizzle', 'weather_desc': 'heavy shower rain and drizzle'},
-        {'weather_id': 321, 'weather_main': 'Drizzle', 'weather_desc': 'shower drizzle'},
-        {'weather_id': 500, 'weather_main': 'Rain', 'weather_desc': 'light rain'},
-        {'weather_id': 501, 'weather_main': 'Rain', 'weather_desc': 'moderate rain'},
-        {'weather_id': 502, 'weather_main': 'Rain', 'weather_desc': 'heavy intensity rain'},
-        {'weather_id': 503, 'weather_main': 'Rain', 'weather_desc': 'very heavy rain'},
-        {'weather_id': 504, 'weather_main': 'Rain', 'weather_desc': 'extreme rain'},
-        {'weather_id': 511, 'weather_main': 'Rain', 'weather_desc': 'freezing rain'},
-        {'weather_id': 520, 'weather_main': 'Rain', 'weather_desc': 'light intensity shower rain'},
-        {'weather_id': 521, 'weather_main': 'Rain', 'weather_desc': 'shower rain'},
-        {'weather_id': 522, 'weather_main': 'Rain', 'weather_desc': 'heavy intensity shower rain'},
-        {'weather_id': 531, 'weather_main': 'Rain', 'weather_desc': 'ragged shower rain'},
-        {'weather_id': 600, 'weather_main': 'Snow', 'weather_desc': 'light snow'},
-        {'weather_id': 601, 'weather_main': 'Snow', 'weather_desc': 'snow'},
-        {'weather_id': 602, 'weather_main': 'Snow', 'weather_desc': 'heavy snow'},
-        {'weather_id': 611, 'weather_main': 'Snow', 'weather_desc': 'sleet'},
-        {'weather_id': 612, 'weather_main': 'Snow', 'weather_desc': 'light shower sleet'},
-        {'weather_id': 613, 'weather_main': 'Snow', 'weather_desc': 'shower sleet'},
-        {'weather_id': 615, 'weather_main': 'Snow', 'weather_desc': 'light rain and snow'},
-        {'weather_id': 616, 'weather_main': 'Snow', 'weather_desc': 'rain and snow'},
-        {'weather_id': 620, 'weather_main': 'Snow', 'weather_desc': 'light shower snow'},
-        {'weather_id': 621, 'weather_main': 'Snow', 'weather_desc': 'shower snow'},
-        {'weather_id': 622, 'weather_main': 'Snow', 'weather_desc': 'heavy shower snow'},
-        {'weather_id': 701, 'weather_main': 'Mist', 'weather_desc': 'mist'},
-        {'weather_id': 711, 'weather_main': 'Smoke', 'weather_desc': 'smoke'},
-        {'weather_id': 721, 'weather_main': 'Haze', 'weather_desc': 'haze'},
-        {'weather_id': 731, 'weather_main': 'Dust', 'weather_desc': 'sand/dust whirls'},
-        {'weather_id': 741, 'weather_main': 'Fog', 'weather_desc': 'fog'},
-        {'weather_id': 751, 'weather_main': 'Sand', 'weather_desc': 'sand'},
-        {'weather_id': 761, 'weather_main': 'Dust', 'weather_desc': 'dust'},
-        {'weather_id': 762, 'weather_main': 'Ash', 'weather_desc': 'volcanic ash'},
-        {'weather_id': 771, 'weather_main': 'Squall', 'weather_desc': 'squalls'},
-        {'weather_id': 781, 'weather_main': 'Tornado', 'weather_desc': 'tornado'},
-        {'weather_id': 800, 'weather_main': 'Clear', 'weather_desc': 'clear sky'},
-        {'weather_id': 801, 'weather_main': 'Clouds', 'weather_desc': 'few clouds: 11-25%'},
-        {'weather_id': 802, 'weather_main': 'Clouds', 'weather_desc': 'scattered clouds: 25-50%'},
-        {'weather_id': 803, 'weather_main': 'Clouds', 'weather_desc': 'broken clouds: 51-84%'},
-        {'weather_id': 804, 'weather_main': 'Clouds', 'weather_desc': 'overcast clouds: 85-100%'}]
+    weather_cond_url='https://openweathermap.org/weather-conditions'
+    weather_tables = pd.read_html(weather_cond_url)
+    df_weather_desc = pd.concat(weather_tables[1:8], ignore_index=True)
+    df_weather_desc = df_weather_desc[[0, 1, 2]]
+    df_weather_desc = df_weather_desc.rename(columns={0: 'weather_id', 1 : 'weather_main', 2: 'weather_desc'})
+    df_weather_desc['weather_main']= df_weather_desc['weather_main'].astype(str)
+    df_weather_desc['weather_desc']= df_weather_desc['weather_desc'].astype(str)
 
     df_dim_city = df_2[['city_id', 'city_name', 'lat_city', 'lon_city', 'country_code']]
-    df_dim_weather_desc=pd.DataFrame(weather_codes)
+    df_dim_weather_desc = df_weather_desc
     df_fact_weather = df_2[['date_time', 'sunrise', 'sunset', 'city_id', 'visibility_meters','cloudiness_perc', 'weather_con_id', 'temp_c', 'feels_like_c',
                             'temp_max_c', 'temp_min_c', 'pressure_hpa', 'sea_level_hpa', 'grnd_level_hpa', 'humidity_perc', 'wind_speed_m_s', 
                             'wind_gust_m_s','wind_dir_deg']]
