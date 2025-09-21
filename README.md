@@ -110,6 +110,8 @@ Additionally, set up an Airflow Variable called open_weather_api through the Air
 │   └── df_fact_weather.csv
 ├── docker-compose.yaml
 ├── docs
+│   ├── poland_weather_db.jpg
+│   ├── weather_data_architecture.jpg
 │   ├── weather_db.png
 │   ├── weather_etl_1.png
 │   └── weather_etl_2.png
