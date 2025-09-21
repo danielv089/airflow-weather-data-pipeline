@@ -16,6 +16,9 @@ The entire workflow is containerized and deployed using a multi-container Docker
 
 The purpose of this project is to build a fully automated ETL pipeline for weather data using Apache Airflow for orchestration and Docker for containerized deployment. 
 
+![data_architecture](/docs/weather_data_architecture.jpg)
+
+
 ## ⚙️ DAGs Overview
 The setup consists of two DAGs:
 
@@ -81,6 +84,10 @@ Username: airflow
 Password: airflow
 
 Additionally, set up an Airflow Variable called open_weather_api through the Airflow Web UI to store your OpenWeather API key and create two Airflow connections in the Web UI: postgres_conn to access the main PostgreSQL DB and postgres_weather_db for the weather database.
+
+## 🗃️ ERD Diagram
+
+![poland_weather_db](/docs/poland_weather_db.jpg)
 
 ## 🧰 Tech Stack
 
